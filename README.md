@@ -221,7 +221,7 @@ View agent health at [mesh.axme.ai](https://mesh.axme.ai):
 ## How It Works
 
 ```
-+-----------+  register()     +----------------+  store    +-----------+
++-----------+  register()     +----------------+  store   +-----------+
 |           | --------------> |                | -------> |           |
 |   Agent   |  heartbeat()    |   AXME Cloud   |          | PostgreSQL|
 |           | -- every 30s -> |   (platform)   | <------- |           |
