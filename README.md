@@ -192,6 +192,8 @@ client.mesh.start_heartbeat(interval_seconds=30)
 
 ## Dashboard
 
+![Agent Mesh Dashboard](mesh-dashboard.png)
+
 View agent health at [mesh.axme.ai](https://mesh.axme.ai):
 
 ```
