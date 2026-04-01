@@ -1,0 +1,21 @@
+{
+  "name": "agent-health-monitoring-demo",
+  "description": "Demonstrates AXME mesh health monitoring with heartbeat and status tracking",
+  "agents": [
+    {
+      "name": "order-processor",
+      "uri": "agent://myorg/production/order-processor",
+      "role": "worker",
+      "mesh": {
+        "heartbeat_interval_seconds": 30,
+        "unreachable_after_missed": 2,
+        "health_statuses": ["healthy", "degraded", "unreachable", "killed"]
+      }
+    }
+  ],
+  "mesh": {
+    "health_check_interval_seconds": 15,
+    "alert_on_status_change": true,
+    "alert_channels": ["intent"]
+  }
+}
