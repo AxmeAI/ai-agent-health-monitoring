@@ -47,16 +47,16 @@ client.mesh.start_heartbeat(interval_seconds=30)
 while True:
     task = get_next_task()
     result = process(task)
-    client.mesh.report_status("healthy", metadata={"tasks_processed": count})
+    client.mesh.report_metric(success=True, latency_ms=result.duration_ms)
 ```
 
 From any other service or dashboard:
 
 ```python
 # See all agents and their health
-agents = client.mesh.list_agents()
-for agent in agents:
-    print(f"{agent.name}: {agent.status} (last seen: {agent.last_heartbeat})")
+result = client.mesh.list_agents()
+for agent in result["agents"]:
+    print(f"{agent['display_name']}: {agent['health_status']} (last: {agent['last_heartbeat_at']})")
 ```
 
 ```
@@ -83,32 +83,17 @@ import os
 
 client = AxmeClient(AxmeClientConfig(api_key=os.environ["AXME_API_KEY"]))
 
-# Register this agent in the mesh
-client.mesh.register(
-    agent_uri="agent://myorg/production/order-processor",
-    metadata={"machine": "machine-3", "version": "1.4.2"},
-)
-
 # Start automatic heartbeat (background thread, every 30s)
 client.mesh.start_heartbeat(interval_seconds=30)
 
 # Agent does its normal work
-def run():
-    while True:
-        task = get_next_task()
-        try:
-            result = process(task)
-            client.mesh.report_status("healthy", metadata={
-                "last_task": task.id,
-                "queue_depth": get_queue_depth(),
-            })
-        except Exception as e:
-            client.mesh.report_status("degraded", metadata={
-                "error": str(e),
-                "last_task": task.id,
-            })
-
-run()
+while True:
+    task = get_next_task()
+    try:
+        result = process(task)
+        client.mesh.report_metric(success=True, latency_ms=result.duration_ms, cost_usd=result.cost)
+    except Exception:
+        client.mesh.report_metric(success=False)
 ```
 
 ### Monitor Side (checks health)
@@ -136,7 +121,7 @@ for agent in agents:
 | Status | Meaning | Trigger |
 |---|---|---|
 | `HEALTHY` | Agent is running and reporting normally | Heartbeat received within expected interval |
-| `DEGRADED` | Agent is running but reporting problems | Agent calls `report_status("degraded")` |
+| `DEGRADED` | Heartbeat late (90-300 seconds) | Automatic, based on heartbeat timing |
 | `UNREACHABLE` | Agent stopped sending heartbeats | No heartbeat for 2x the interval |
 | `KILLED` | Agent was intentionally terminated | Explicit kill command or shutdown signal |
 
@@ -205,7 +190,7 @@ View agent health at [mesh.axme.ai](https://mesh.axme.ai).
 |           | --------------> |                | -------> |           |
 |   Agent   |  heartbeat()    |   AXME Cloud   |          | PostgreSQL|
 |           | -- every 30s -> |   (platform)   | <------- |           |
-|           |  report_status  |                |  query   +-----------+
+|           | report_metric   |                |  query   +-----------+
 +-----------+                 |                |
                               |  missed beat?  |          +-----------+
                               |  v             | alert -> |           |
