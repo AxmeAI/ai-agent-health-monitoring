@@ -194,27 +194,7 @@ client.mesh.start_heartbeat(interval_seconds=30)
 
 ![Agent Mesh Dashboard](mesh-dashboard.png)
 
-View agent health at [mesh.axme.ai](https://mesh.axme.ai):
-
-```
-+-----------------------------------------------------------+
-|  AXME Mesh - Agent Health                    20 agents     |
-+-----------------------------------------------------------+
-|                                                           |
-|  HEALTHY (17)     ################################  85%   |
-|  DEGRADED (2)     ####                              10%   |
-|  UNREACHABLE (1)  ##                                 5%   |
-|  KILLED (0)                                          0%   |
-|                                                           |
-+-----------------------------------------------------------+
-|  Name                  Machine     Status     Last Seen   |
-|  order-processor       machine-3   HEALTHY    2s ago      |
-|  refund-agent          machine-3   HEALTHY    5s ago      |
-|  inventory-sync        machine-2   DEGRADED   28s ago     |
-|  email-sender          machine-1   UNREACHABLE 3m ago     |
-|  ...                                                      |
-+-----------------------------------------------------------+
-```
+View agent health at [mesh.axme.ai](https://mesh.axme.ai).
 
 ---
 
