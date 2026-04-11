@@ -5,7 +5,7 @@
 AI agents run as background processes across multiple machines. They crash. They hang. They run out of memory. Without health monitoring, a crashed agent looks identical to a working agent - until someone notices the output stopped.
 
 > **Alpha** - Built with [AXME](https://github.com/AxmeAI/axme) (AXP Intent Protocol).
-> [cloud.axme.ai](https://cloud.axme.ai) - [hello@axme.ai](mailto:hello@axme.ai)
+> [cloud.axme.ai](https://cloud.axme.ai) - [contact@axme.ai](mailto:contact@axme.ai)
 
 ---
 
